@@ -6,7 +6,7 @@ const events = [
         type: "Keynote",
         date: "2025-11-20T09:00:00",
         description: "Join industry visionary Dr. Evelyn Reed as she unveils the next decade of AI innovation.",
-      image:https://www.bing.com/images/search?view=detailV2&ccid=Cbg3D%2bZe&id=4D3E37AE3B9513FBC2E2D1023128C1C9E7AD86D0&thid=OIP.Cbg3D-ZeEHaR45hwkyAjzQHaEK&mediaurl=https%3a%2f%2fimgscf.slidemembers.com%2fdocs%2f1%2f1%2f208%2fdisplay_-_keynote_images_free_download_207953.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.09b8370fe65e107691e39870932023cd%3frik%3d0Iat58nBKDEC0Q%26pid%3dImgRaw%26r%3d0&exph=540&expw=959&q=images%2fkeynote.jpg&FORM=IRPRST&ck=8B1689E0C4E99A03B9211B61DEE9C58B&selectedIndex=6&itb=0
+        "
     },
     {
         title: "Advanced JavaScript Workshop",
