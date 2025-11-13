@@ -1,4 +1,3 @@
-// ...existing code...
 const events = [
     {
         title: "Opening Keynote: The Future of AI",
@@ -142,64 +141,61 @@ const events = [
     }
 ];
 
-function escapeHTML(str){
-    return String(str).replace(/[&<>"']/g, s=>{
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[s];
+const eventContainer = document.getElementById('event-container');
+
+function createEventCard(event) {
+    const card = document.createElement('div');
+    card.className = 'event-card';
+
+    const img = document.createElement('img');
+    img.src = event.image;
+    img.alt = event.title;
+
+    const title = document.createElement('h2');
+    title.textContent = event.title;
+
+    const type = document.createElement('p');
+    type.textContent = event.type;
+
+    const date = document.createElement('p');
+    date.textContent = new Date(event.date).toLocaleString();
+
+    const description = document.createElement('p');
+    description.textContent = event.description;
+
+    card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(type);
+    card.appendChild(date);
+    card.appendChild(description);
+
+    return card;
+}
+
+function renderEvents(filter = 'All') {
+    eventContainer.innerHTML = '';
+    const filteredEvents = events.filter(event => filter === 'All' || event.type === filter);
+    filteredEvents.forEach(event => {
+        const eventCard = createEventCard(event);
+        eventContainer.appendChild(eventCard);
     });
 }
 
-function formatLocal(date) {
-    const d = new Date(date);
-    return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
-}
+document.addEventListener('DOMContentLoaded', () => {
+    renderEvents();
 
-function isoToUTCString(iso) {
-    // returns YYYYMMDDTHHMMSSZ
-    const d = new Date(iso);
-    const pad = n=>String(n).padStart(2,'0');
-    return d.getUTCFullYear()
-        + pad(d.getUTCMonth()+1)
-        + pad(d.getUTCDate())
-        + 'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + 'Z';
-}
+    const filterButtons = document.querySelectorAll('.filter-button');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.dataset.filter;
+            renderEvents(filter);
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        });
+    });
 
-function durationHoursForEvent(ev){
-    // heuristic: workshops -> 3 hours, hackathon -> 24 hours, otherwise 1 hour
-    const t = ev.type?.toLowerCase() || '';
-    if (t.includes('workshop')) return 3;
-    if (ev.title?.toLowerCase().includes('hackathon')) return 24;
-    return 1;
-}
-
-function createICS(ev){
-    const dtStart = isoToUTCString(ev.date);
-    const hours = durationHoursForEvent(ev);
-    const dtEnd = isoToUTCString(new Date(new Date(ev.date).getTime() + hours*60*60*1000).toISOString());
-    const uid = `techcon-${Date.now()}-${Math.random().toString(36).slice(2,9)}`;
-    const summary = ev.title;
-    const description = ev.description;
-    const location = 'TechCon Venue';
-    const ics = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH',
-        'BEGIN:VEVENT',
-        `UID:${uid}`,
-        `DTSTAMP:${isoToUTCString(new Date().toISOString())}`,
-        `DTSTART:${dtStart}`,
-        `DTEND:${dtEnd}`,
-        `SUMMARY:${summary}`,
-        `DESCRIPTION:${description}`,
-        `LOCATION:${location}`,
-        'END:VEVENT',
-        'END:VCALENDAR'
-    ].join('\r\n');
-    return new Blob([ics], { type: 'text/calendar' });
-}
-
-function googleCalendarUrl(ev){
-    const start = isoToUTCString(ev.date);
-    const hours = durationHoursForEvent(ev);
-    const end = isoToUTCString(new Date(new Date(ev.date).getTime() + hours*60*60*1000).toISOString());
-}
+    const toggleButton = document.getElementById('toggle-mode');
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+    });
+});
